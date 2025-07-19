@@ -1,27 +1,32 @@
-class Solution {
-    public List<Integer> diffWaysToCompute(String expression) {
-        List<Integer> result = new ArrayList<>();
-        
-        for (int i = 0; i < expression.length(); i++) {
-            char c = expression.charAt(i);
-            if (c == '+' || c == '-' || c == '*' || c == '/') {
-                List<Integer> left = diffWaysToCompute(expression.substring(0, i));
-                List<Integer> right = diffWaysToCompute(expression.substring(i+1));
+public class Solution {
+    Map<String, List<Integer>> memo = new HashMap<>();
 
-                for (int l: left) {
-                    for (int r: right) {
-                        if (c == '+') result.add(l+r);
-                        else if (c == '-') result.add(l-r);
-                        else if (c == '*') result.add(l*r);
-                        else result.add(l/r);
+    public List<Integer> diffWaysToCompute(String input) {
+        if (memo.containsKey(input)) return memo.get(input);
+
+        List<Integer> result = new ArrayList<>();
+
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c == '+' || c == '-' || c == '*') {
+                List<Integer> left = diffWaysToCompute(input.substring(0, i));
+                List<Integer> right = diffWaysToCompute(input.substring(i + 1));
+
+                for (int l : left) {
+                    for (int r : right) {
+                        if (c == '+') result.add(l + r);
+                        else if (c == '-') result.add(l - r);
+                        else if (c == '*') result.add(l * r);
                     }
                 }
             }
         }
 
         if (result.isEmpty()) {
-            result.add(Integer.parseInt(expression));
+            result.add(Integer.parseInt(input));
         }
+
+        memo.put(input, result);
         return result;
     }
 }
