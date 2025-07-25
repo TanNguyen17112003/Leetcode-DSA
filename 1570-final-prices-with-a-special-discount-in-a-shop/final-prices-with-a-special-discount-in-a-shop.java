@@ -1,24 +1,28 @@
-import java.util.*;
-
 class Solution {
     public int[] finalPrices(int[] prices) {
-        int n = prices.length;
-        int[] result = new int[n];
-        Stack<Integer> stack = new Stack<>(); // Stack chứa giá trị
+        ArrayList<Integer> list = new ArrayList<>();
 
-        for (int i = n - 1; i >= 0; i--) {
-            // Loại bỏ các giá trị lớn hơn prices[i]
-            while (!stack.isEmpty() && stack.peek() > prices[i]) {
-                stack.pop();
+        for (int i = 0; i < prices.length; i++) {
+            if (i == prices.length - 1) { 
+                list.add(prices[i]); 
+                continue;
             }
-
-            // Nếu stack không rỗng, phần tử đầu tiên nhỏ hơn hoặc bằng là giảm giá
-            result[i] = stack.isEmpty() ? prices[i] : prices[i] - stack.peek();
-
-            // Push chính phần tử hiện tại để dùng cho phần tử bên trái
-            stack.push(prices[i]);
+            boolean match = false;
+            for (int j = i+1; j < prices.length; j++) {
+                if (prices[j] <= prices[i]) {
+                    list.add(prices[i]-prices[j]);
+                    match = true;
+                    break;
+                }
+            }
+            if (match == false) list.add(prices[i]);
         }
 
+
+        int[] result = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            result[i] = list.get(i);
+        }
         return result;
     }
 }
